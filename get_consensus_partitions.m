@@ -1,5 +1,4 @@
-function [partition_assignment, Q, qc] = get_consensus_partitions(A, N, gamma)
-S = get_multiple_partitions(A, N, gamma);
+function [partition_assignment, Q, qc] = get_consensus_partitions(S)
 [S2, Q2, ~, qc] = consensus_iterative(S);
 while qc > 0 %all consensus partitions must agree (max(size(A))*N/100)
     disp('repeating to find agreeing consensus')

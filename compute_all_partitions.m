@@ -8,7 +8,7 @@ qc = zeros(N,1); % qc: fraction of nodes that are repelling (wrt null model)
 for i=1:N
     disp('-------------------------------------------------------------------------------------')
     disp(i)
-    [partition_assignment(i,:), Qc(i), qc(i)] = get_consensus_partitions(weighted_graphs(:,:,i), Nreps, gamma);
+    [partition_assignment(i,:), Qc(i), qc(i)] = get_consensus_partitions(get_multiple_partitions(A, Nreps, gamma));
     Q(i) = modularity_measure(weighted_graphs(:,:,i),gamma, partition_assignment(i,:)); 
 end
 % 
