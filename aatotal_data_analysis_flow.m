@@ -33,7 +33,8 @@ save('distances_w','distances')
 
 % SECTION 3: finding partitions, modularity
 for gamma = [0.9 1 1.1 1.2]
-    [partition_assignment,Q,Qc,qc] = compute_all_partitions(weighted_graphs, gamma, 100); %can up Nreps
+    disp(gamma)
+    [partition_assignment,Q,Qc,qc] = compute_all_partitions(weighted_graphs, gamma, 500); %can up Nreps
     save(['partition_assignment' num2str(gamma)],'partition_assignment')
     save(['Q' num2str(gamma)],'Q')
     save(['Qc' num2str(gamma)],'Qc')
