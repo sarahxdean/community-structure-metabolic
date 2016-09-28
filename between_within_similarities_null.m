@@ -1,4 +1,4 @@
-function between_within_similarities_null(similarities, a_indices, b_indices, Nrep)
+function between_within_similarities_null(similarities, a_indices, b_indices, Nrep, aname, bname, measurename)
 
 [a_a_sim, b_b_sim, a_b_sim] = within_between_group_similarities(similarities, a_indices, b_indices);
 avg_a_a_sim = mean(a_a_sim);
@@ -26,28 +26,18 @@ for i = 1:Nrep
     avg_wtn_sim_n(i) = mean(vertcat(aa,bb));
     avg_a_b_sim_n(i) = mean(ab);
 end
-figure;
-histfit(avg_a_b_sim_n,12,'normal')
-disp(avg_a_b_sim)
-xh = [avg_a_b_sim avg_a_b_sim]; yh = [0 100];
-hold on; plot(xh,yh,'LineWidth',2)
 
 figure;
-histfit(avg_a_a_sim_n,12,'normal')
-disp(avg_a_a_sim)
-xh = [avg_a_a_sim avg_a_a_sim]; yh = [0 100];
-hold on; plot(xh,yh,'LineWidth',2)
+subplot(1,3,1)
+null_histogram_figure(avg_a_b_sim_n, avg_a_b_sim, ...
+    ['between group ' measurename], ['Permutation Test for Between Group ' measurename ' Significance'])
+subplot(1,3,2)
+null_histogram_figure(avg_a_a_sim_n, avg_a_a_sim, ...
+    ['within ' aname ' group ' measurename], ['Permutation Test for ' aname ' ' measurename ' Significance'])
+subplot(1,3,3)
+null_histogram_figure(avg_b_b_sim_n, avg_b_b_sim, ...
+    ['within ' aname ' group' measurename], ['Permutation Test for ' bname ' ' measurename ' Similarity Significance'])
 
 figure;
-histfit(avg_b_b_sim_n,12,'normal')
-disp(avg_b_b_sim)
-xh = [avg_b_b_sim avg_b_b_sim]; yh = [0 100];
-hold on; plot(xh,yh,'LineWidth',2)
-
-figure;
-histfit(avg_wtn_sim_n - avg_a_b_sim_n,12,'normal')
-disp(avg_wtn_sim - avg_a_b_sim)
-xh = [(avg_wtn_sim - avg_a_b_sim) (avg_wtn_sim - avg_a_b_sim)]; yh = [0 100];
-hold on; plot(xh,yh,'LineWidth',2)
-xlabel('within- and between-group similarity difference')
-title('(c) Permutation Test for Fasted and Fed Group Difference Significance')
+null_histogram_figure(avg_wtn_sim_n - avg_a_b_sim_n, avg_wtn_sim - avg_a_b_sim, ...
+    ['within- and between-group ' measurename ' difference'], ['Permutation Test for ' aname ' and ' bname ' Group Difference Significance'])

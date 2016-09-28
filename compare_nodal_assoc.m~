@@ -1,0 +1,25 @@
+%load('partition_assignment.mat')
+%tues_thurs_session_keys
+tues_partitions = partition_assignment(tuesday_indices,:);
+thurs_partitions = partition_assignment(thursday_indices,:);
+
+[Y, O] = sort(tues_top_partitions);
+rearranged = X_tues(O,O,1);
+imagesc(abs(graph(:,:,1)))
+colormap(pmkmp(180))
+set(gca, 'CLim', [0, 1]);
+colorbar
+axis square
+set(gca, 'XTick', [], 'XTickLabel', [])
+set(gca, 'YTick', [], 'YTickLabel', [])
+
+X = get_nodal_assoc(vertcat(tues_partitions, thurs_partitions));
+X_tues = get_nodal_assoc(tues_partitions);
+X_thurs = get_nodal_assoc(thurs_partitions);
+
+X_tuesplot_colored_matrix(X_tues,180)
+plot_colored_matrix(X_thurs,180)
+plot_colored_matrix(X_tues-X_thurs,180)
+
+%[assoc_partition_assignment, Qc, qc] = get_consensus_partitions(get_multiple_partitions(abs(X_tues-X_thurs), 100, 1));
+%fcn_myconnectome_surface2(assoc_partition_assignment.') % nodes are in the same module if they differ strongly with other nodes in that module?

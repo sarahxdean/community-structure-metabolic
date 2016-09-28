@@ -5,4 +5,5 @@ count = histc(consensus,community);
 j=1;
 for i = find(count>threshold)
     top_partitions = top_partitions + j*(consensus == i);
+    j = j + 1;
 end

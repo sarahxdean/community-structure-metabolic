@@ -39,7 +39,7 @@ maxy = max(vertcat(tues_tues_sim,thurs_thurs_sim,tues_thurs_sim));
 boxplot(vertcat(tues_tues_sim,thurs_thurs_sim)); axis([0.7,1.3,miny,maxy])
 figure; boxplot(tues_thurs_sim);  axis([0.7,1.3,miny,maxy])
 figure; cdfplot(vertcat(tues_tues_sim,thurs_thurs_sim))
-hold on; cdfplot(tues_thurs_sim); legend('Within', 'Between')
+hold on; cdfplot(tues_thurs_sim)
 [h,p ]=ttest2(vertcat(tues_tues_sim,thurs_thurs_sim), tues_thurs_sim);
 disp(['Correlation group ttest2 p-value: ' num2str(p)]) % not sure ttest is applicable
 
@@ -79,10 +79,8 @@ end
 
 miny = min(vertcat(Q(tuesday_indices),Q(thursday_indices)));
 maxy = max(vertcat(Q(tuesday_indices),Q(thursday_indices)));
-figure; boxplot(Q(tuesday_indices)); axis([0.7,1.3,miny,maxy])
+figure;boxplot(Q(tuesday_indices)); axis([0.7,1.3,miny,maxy])
 figure; boxplot(Q(thursday_indices));  axis([0.7,1.3,miny,maxy])
-figure; cdfplot(Q(tuesday_indices))
-hold on; cdfplot(Q(thursday_indices)); legend('Fasted', 'Fed')
 
 [~,p]=ttest2(Q(tuesday_indices),Q(thursday_indices));
 disp(['Average Modularity ttest2 p-value: ' num2str(p)])
@@ -100,38 +98,34 @@ maxy = max(vertcat(tues_tues_sim,thurs_thurs_sim,tues_thurs_sim));
 figure; boxplot(vertcat(tues_tues_sim,thurs_thurs_sim)); axis([0.7,1.3,miny,maxy])
 figure; boxplot(tues_thurs_sim);  axis([0.7,1.3,miny,maxy])
 figure; cdfplot(vertcat(tues_tues_sim,thurs_thurs_sim))
-hold on; cdfplot(tues_thurs_sim); legend('Within', 'Between')
+hold on; cdfplot(tues_thurs_sim)
 [h,p ]=ttest2(vertcat(tues_tues_sim,thurs_thurs_sim), tues_thurs_sim);
 disp(['Similarity group ttest2 p-value: ' num2str(p)]) % not sure ttest is applicable
- % more: community size, ~*~hungarian alg and over time~*~
 
-% SECTION 6: consensus partition, nodal association comparison, on-brain
-% comparison (alluvial)
+% SECTION 6: consensus partition
 tues_consensus = get_consensus_partitions(partition_assignment(tuesday_indices,:));
 thurs_consensus = get_consensus_partitions(partition_assignment(thursday_indices,:));
 
-tues_top_partitions = get_top_partitions(tues_consensus, 15);
-thurs_top_partitions = get_top_partitions(thurs_consensus, 15);
+tues_top_partitions = get_top_partitions(tues_consensus, 10);
+thurs_top_partitions = get_top_partitions(thurs_consensus, 10);
 
-% node modular allegiance/tues-thurs DIFFERENCES. highlight.. on brain?
-compare_nodal_assoc(a_all_part, b_all_part, a_top_part, b_top_part)
-
-% brain plot of consensus partitions
 fcn_myconnectome_surface2(tues_top_partitions.')
 fcn_myconnectome_surface2(thurs_top_partitions.')
 
-
+% boxplot: similarities, community size, ~*~hungarian alg and over time~*~
+%          t-tests for significance
+% node modular allegiance (arranged consensus?)/tues-thurs DIFFERENCES. highlight
+%      differences on brain -- abstract graph figure?
 % consensus community on brain with changing modular allegiance
-% day-by-day: spatial statistics. Inter/intra? Classification algorithm?
+% day-by-day: spatial statistics. Classification algorithm?
 
-% interesting to look through ALL available data (anxiety, etc) and see if
+% interesting to look through ALL available data and see if
 % tuesday/thursday difference is detected anywhere else
 
 % SECTION 7: supplementary figures
 boxplot(strengths,'PlotStyle','compact')
 boxplot(clust_coeff,'PlotStyle','compact')
-% other metrics
 
-% something about significant modules?
+% something about significant modules
 
 % all: other values of gamma
