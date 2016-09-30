@@ -18,7 +18,6 @@ weighted_graphs_t = time_corr_compute(all_timeseries_filtered);
 
 % Option 2: wavelet transform and correlations
 [wavelet_correlations, weighted_graphs_w] = wavelet_corr_calc(all_timeseries);
-
 save('weighted_graphs_t', 'weighted_graphs_t')
 save('weighted_graphs_w', 'weighted_graphs_w')
 
@@ -28,10 +27,8 @@ weighted_graphs = abs(weighted_graphs_w); %consider looking at not just absolute
 % SECTION 2: comparing raw networks
 similarities_raw = all_matrix_similarities(weighted_graphs);
 [tuesday_indices, thursday_indices] = tues_thurs_session_keys();
-
 % null test for significance
-between_within_similarities_null(similarities_raw, tuesday_indices, thursday_indices, 100, 'Fasted', 'Fed', 'Correlation')
-
+between_within_similarities_null(similarities_raw, tuesday_indices, thursday_indices, 500, 'Fasted', 'Fed', 'Correlation')
 %boxplots and t-test
 [tues_tues_sim, thurs_thurs_sim, tues_thurs_sim] = within_between_group_similarities(similarities_raw, tuesday_indices, thursday_indices);
 miny = min(vertcat(tues_tues_sim,thurs_thurs_sim,tues_thurs_sim));
@@ -77,17 +74,17 @@ end
 % load('Qc1')
 % load('qc1')
 
+[~,p]=ttest2(Q(tuesday_indices),Q(thursday_indices));
+disp(['Average Modularity ttest2 p-value: ' num2str(p)])
+[~,p]=ttest2(Qc(tuesday_indices),Qc(thursday_indices));
+disp(['Average Modularity of consensus ttest2 p-value: ' num2str(p)])
+
 miny = min(vertcat(Q(tuesday_indices),Q(thursday_indices)));
 maxy = max(vertcat(Q(tuesday_indices),Q(thursday_indices)));
 figure; boxplot(Q(tuesday_indices)); axis([0.7,1.3,miny,maxy])
 figure; boxplot(Q(thursday_indices));  axis([0.7,1.3,miny,maxy])
 figure; cdfplot(Q(tuesday_indices))
 hold on; cdfplot(Q(thursday_indices)); legend('Fasted', 'Fed')
-
-[~,p]=ttest2(Q(tuesday_indices),Q(thursday_indices));
-disp(['Average Modularity ttest2 p-value: ' num2str(p)])
-[~,p]=ttest2(Qc(tuesday_indices),Qc(thursday_indices));
-disp(['Average Modularity of consensus ttest2 p-value: ' num2str(p)])
 
 % SECTION 5: partition similarity, nodal association*, area of brain* (spatial measures *hungarian algorithm)
 similarities = all_partition_similarities(partition_assignment);
@@ -114,15 +111,26 @@ tues_top_partitions = get_top_partitions(tues_consensus, 15);
 thurs_top_partitions = get_top_partitions(thurs_consensus, 15);
 
 % node modular allegiance/tues-thurs DIFFERENCES. highlight.. on brain?
-compare_nodal_assoc(a_all_part, b_all_part, a_top_part, b_top_part)
+compare_nodal_assoc(partition_assignment(tuesday_indices,:), partition_assignment(thursday_indices,:), tues_top_partitions, thurs_top_partitions)
 
 % brain plot of consensus partitions
 fcn_myconnectome_surface2(tues_top_partitions.')
 fcn_myconnectome_surface2(thurs_top_partitions.')
 
+% Get the alluvial flow daigram:
+write_matrix_to_pajek(weighted_graphs(:,:,1), '../final-figures/pajek.net') %need baseline connectivity matrix even though this won't be used
+write_partition_to_pajek(tues_top_partitions.', '../final-figures/pajek_tues.clu')
+write_partition_to_pajek(thurs_top_partitions.', '../final-figures/pajek_thurs.clu')
+%upload files here:
+%http://www.mapequation.org/apps/AlluvialGenerator.html#alluvialinstructions
+%"Add Network"
 
-% consensus community on brain with changing modular allegiance
-% day-by-day: spatial statistics. Inter/intra? Classification algorithm?
+
+% day-by-day: spatial statistics (partition_statistics.m). Inter/intra? 
+partition_significance = partition_spatial_statistics(weighted_graphs, 500, partition_assignment, tuesday_indices, thursday_indices, coor);
+
+% Classification algorithm?
+partition_sim_as_graph(tuesday_indices, thursday_indices, similarities, 1, 500)
 
 % interesting to look through ALL available data (anxiety, etc) and see if
 % tuesday/thursday difference is detected anywhere else

@@ -59,7 +59,7 @@ colorbar();
 
 f(1) = figure;
 ax(1) = axes;
-subplot(2,2,1)
+subplot(4,1,1)
 ph(1) = trisurf(sl.faces,sl.vertices(:,1),sl.vertices(:,2),sl.vertices(:,3),gl.cdata);
 view([-1 0 0]);
 axis image
@@ -70,7 +70,7 @@ colormap(pmkmp(numpart));
 set(gca, 'CLim', [0, numpart-1]);
 
 ax(2) = axes;
-subplot(2,2,3)
+subplot(4,1,3)
 ph(3) = trisurf(sl.faces,sl.vertices(:,1),sl.vertices(:,2),sl.vertices(:,3),gl.cdata);
 view([1 0 0]);
 axis image
@@ -82,7 +82,7 @@ set(gca, 'CLim', [0, numpart-1]);
 
 %f(2) = figure;
 ax(2) = axes;
-subplot(2,2,2)
+subplot(4,1,2)
 ph(2) = trisurf(sr.faces,sr.vertices(:,1),sr.vertices(:,2),sr.vertices(:,3),gr.cdata);
 view([1 0 0]);
 axis image
@@ -94,7 +94,7 @@ set(gca, 'CLim', [0, numpart-1]);
 
 
 ax(2) = axes;
-subplot(2,2,4)
+subplot(4,1,4)
 ph(4) = trisurf(sr.faces,sr.vertices(:,1),sr.vertices(:,2),sr.vertices(:,3),gr.cdata);
 view([-1 0 0]);
 axis image
